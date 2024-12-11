@@ -227,7 +227,7 @@ public class Character2DMovement : MonoBehaviour
 			var jump = mInput.jump;
 			var falling = !mController.isGrounded && mFallTimeoutDelta <= 0.0f;
 
-			/*
+            /*
 			 * Task #1a: Passing properties to the Animator
 			 * 
 			 * After rotating the character, he should now be able to look in the
@@ -265,6 +265,22 @@ public class Character2DMovement : MonoBehaviour
 			 *   * Current Animator instance: *animator*
 			 *   * Animator methods: *SetFloat* and *SetBool*
 			 */
-	    }
+            if (mInput.move.x > 0 && !mHeadingRight)
+            {
+                mHeadingRight = true;
+                transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+            }
+            else if (mInput.move.x < 0 && mHeadingRight)
+            {
+                mHeadingRight = false;
+                transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+            }
+            animator.SetFloat("Speed", mHorizontalSpeed);
+            animator.SetFloat("MoveSpeed", Math.Abs(mTargetHorSpeed / MoveSpeedAnimation));
+            animator.SetBool("Jump", mInput.jump && !mController.isGrounded);
+            animator.SetBool("Grounded", mController.isGrounded);
+            animator.SetBool("Fall", !mController.isGrounded && mFallTimeoutDelta <= 0.0f);
+            animator.SetBool("Crouch", mInput.crouch);
+        }
     }
 }
